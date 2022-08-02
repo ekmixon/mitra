@@ -62,7 +62,7 @@ for l in invert_data:
 
 def xor(_a1, _a2):
 	assert len(_a1) == len(_a2)
-	return bytes([(_a1[i] ^ _a2[i]) for i in range(len(_a1))])
+	return bytes(_a1[i] ^ _a2[i] for i in range(len(_a1)))
 
 
 noncesfn = os.path.join(dir_path, "nonces.txt")
@@ -157,8 +157,7 @@ def gcm_decrypt(_key, _nonce, _cipher, _tag, _ad):
 
 	decryptor.authenticate_additional_data(_ad)
 
-	pt = decryptor.update(_cipher) + decryptor.finalize()
-	return pt
+	return decryptor.update(_cipher) + decryptor.finalize()
 
 
 def unhextry(_d):
@@ -176,7 +175,7 @@ def getCoeffs(_H1, _H2, _pows, DEBUG=False):
 	retval = [l2b(1, 16), ifAdd(_H1,_H2)]
 	prev_H1 = _H1
 	prev_H2 = _H2
-	for i in range(2, _pows+1):
+	for _ in range(2, _pows+1):
 		prev_H1 = ifMul(prev_H1, _H1)
 		prev_H2 = ifMul(prev_H2, _H2)
 		retval.append(ifAdd(prev_H1, prev_H2))
@@ -191,7 +190,7 @@ def getCoeffs(_H1, _H2, _pows, DEBUG=False):
 
 def getInverse(_coef):
 	global invert_data
-	print("Coef to be inverted: %s" % b2a(_coef), end = '')
+	print(f"Coef to be inverted: {b2a(_coef)}", end = '')
 	if _coef in INVERTS:
 		print(" (already computed)")
 		inverse = INVERTS[_coef]
@@ -229,7 +228,7 @@ def getSum(_ad, _coeffs, _pads, _ct, _idx):
 	sum_ = ifAdd(sum_, lenblock_term)
 	sum_ = ifAdd(sum_, _pads)
 	for i in range(len(_ct)):
-		if not i == _idx:
+		if i != _idx:
 			block = _ct[i]
 			coeff = _coeffs[ct_bkl+1-i]
 			sum_ = ifAdd(sum_, ifMul(block, coeff))

@@ -32,12 +32,12 @@ class parser(FType):
 	def wrap(self, parasite):
 		l = int4l(len(parasite) + 4*4)
 
-		wrapped = b"".join([
-			b"\xAD\x0B\0\x40", # non-copied custom block
-			l,
-			b"Ange",           # Private Enterprise Number
-			parasite,
-			l,
-			])
-
-		return wrapped
+		return b"".join(
+			[
+				b"\xAD\x0B\0\x40",  # non-copied custom block
+				l,
+				b"Ange",  # Private Enterprise Number
+				parasite,
+				l,
+			]
+		)

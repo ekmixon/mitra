@@ -80,7 +80,7 @@ class parser(FType):
 			c = get2(d, o, self.endianness) # entries count
 			o += 2
 
-			for i in range(c):
+			for _ in range(c):
 				tag = get2(d, o, self.endianness)
 				o += 2
 				type_ = get2(d, o, self.endianness)

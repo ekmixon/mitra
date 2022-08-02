@@ -31,11 +31,11 @@ def get8b(d, o):
 
 def get2(d, o, e):
 	assert e[0] in "<>"
-	return struct.unpack(e[0] + "H", d[o:o+2])[0]
+	return struct.unpack(f"{e[0]}H", d[o:o+2])[0]
 
 def get4(d, o, e):
 	assert e[0] in "<>"
-	return struct.unpack(e[0] + "I", d[o:o+4])[0]
+	return struct.unpack(f"{e[0]}I", d[o:o+4])[0]
 
 
 def inc4l(d, o, delta):
@@ -55,9 +55,9 @@ def inc4b(d, o, delta):
 def inc4(d, o, delta, e):
 	assert e[0] in "<>"
 	s = 4
-	v = struct.unpack(e[0] + "I", d[o:o+s])[0]
+	v = struct.unpack(f"{e[0]}I", d[o:o+s])[0]
 	v += delta
-	d = d[:o] + struct.pack(e[0] + "I", v) + d[o+s:]
+	d = d[:o] + struct.pack(f"{e[0]}I", v) + d[o+s:]
 	return d
 
 def inc8l(d, o, delta):
@@ -83,7 +83,7 @@ def int2l(i):
 
 def int2(i, e):
 	assert e[0] in "<>"
-	return struct.pack(e[0] + "H", i)
+	return struct.pack(f"{e[0]}H", i)
 
 
 def int4b(i):
@@ -94,7 +94,7 @@ def int4l(i):
 
 def int4(i, e):
 	assert e[0] in "<>"
-	return struct.pack(e[0] + "I", i)
+	return struct.pack(f"{e[0]}I", i)
 
 
 def getd(d, o, s):

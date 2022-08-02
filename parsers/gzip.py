@@ -24,11 +24,7 @@ class parser(FType):
 
 		self.cut = 10
 		self.prewrap = 2
-		if not self.hack:
-			self.prewrap = 6
-		else:
-			self.prewrap = 2
-
+		self.prewrap = 2 if self.hack else 6
 		self.parasite_o = self.cut + self.prewrap
 		self.parasite_s = 0xFFFF
 
@@ -43,14 +39,17 @@ class parser(FType):
 
 	def wrap(self, data):
 		# the extra field is made of TLV subfields
-		if not self.hack:
-			extra = b"".join([
-				b"Id",             # Type
-				int2l(len(data)),  # Length
-				data,              # Value
-			])
-		else:
-			extra = data
+		extra = (
+			data
+			if self.hack
+			else b"".join(
+				[
+					b"Id",  # Type
+					int2l(len(data)),  # Length
+					data,  # Value
+				]
+			)
+		)
 
 		return b"".join([
 			int2l(len(extra)),

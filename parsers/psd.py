@@ -53,15 +53,15 @@ class parser(FType):
 
 
 	def wrap(self, parasite):
-		ImageResourceBlock = b"".join([
-			b"8BIM",       # Signature
-			b"\0\0",       # UID
-			b"\0\0",       # Name (padded empty string here)
-			int4b(len(parasite)),
-			parasite
-		])
-
-		return ImageResourceBlock
+		return b"".join(
+			[
+				b"8BIM",  # Signature
+				b"\0\0",  # UID
+				b"\0\0",  # Name (padded empty string here)
+				int4b(len(parasite)),
+				parasite,
+			]
+		)
 
 
 	def fixformat(self, d, delta):

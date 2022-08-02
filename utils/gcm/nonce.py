@@ -20,14 +20,11 @@ pad16 = lambda s: s + b"\0" * (16-len(s))
 
 def xor(a1, a2):
 	assert len(a1) == len(a2)
-	return bytes([(a1[i] ^ a2[i]) for i in range(len(a1))])
+	return bytes(a1[i] ^ a2[i] for i in range(len(a1)))
 
 
 def xorcmp(a1, a2, x):
-	for i, c in enumerate(x):
-		if a1[i] ^ a2[i] != c:
-			return False
-	return True
+	return all(a1[i] ^ a2[i] == c for i, c in enumerate(x))
 
 
 def nonce_search(thread):
@@ -95,17 +92,17 @@ key1 = b"\x01" * 16
 key2 = b"\x02" * 16
 
 if __name__ == '__main__':
-	print("Start time: %s" % datetime.datetime.now())
+	print(f"Start time: {datetime.datetime.now()}")
 	if COUNTER_START == 0:
 		mode = "CTR"
 	elif COUNTER_START == 2:
 		mode = "GCM"
 	else:
 		mode = "unk"
-	print("key1: %s (%s)" % (binascii.hexlify(key1), repr(key1)))
-	print("key2: %s (%s)" % (binascii.hexlify(key2), repr(key2)))
-	print("hdr1: %s (%s)" % (binascii.hexlify(hdr1), repr(hdr1)))
-	print("hdr2: %s (%s)" % (binascii.hexlify(hdr2), repr(hdr2)))
+	print(f"key1: {binascii.hexlify(key1)} ({repr(key1)})")
+	print(f"key2: {binascii.hexlify(key2)} ({repr(key2)})")
+	print(f"hdr1: {binascii.hexlify(hdr1)} ({repr(hdr1)})")
+	print(f"hdr2: {binascii.hexlify(hdr2)} ({repr(hdr2)})")
 	print("start: %i (%s)" % (COUNTER_START, mode))
 
 	multiprocessing.freeze_support()

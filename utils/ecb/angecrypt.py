@@ -65,15 +65,18 @@ if __name__=='__main__':
 		dIn[swaps[1]:]
 	print(len())
 
-	output = "\n".join([
-			"plaintext: %s" % b2a(binascii.hexlify(dOut)),
-			"key: %s" % b2a(binascii.hexlify(key)),
-		  "exts: %s" % " ".join(exts),
-		  "origin: %s" % fnin,
-		])
+	output = "\n".join(
+		[
+			f"plaintext: {b2a(binascii.hexlify(dOut))}",
+			f"key: {b2a(binascii.hexlify(key))}",
+			f'exts: {" ".join(exts)}',
+			f"origin: {fnin}",
+		]
+	)
 
-	fnoutput = "%s.%s" % (fnpoc, exts[0])
-	print("Generated input file: %s" % (fnpoc))
+
+	fnoutput = f"{fnpoc}.{exts[0]}"
+	print(f"Generated input file: {fnpoc}")
 	with open(fnpoc, "wb") as fpoc:
 		fpoc.write(output.encode())
 		fpoc.close()

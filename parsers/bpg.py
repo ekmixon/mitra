@@ -17,8 +17,7 @@ def ue7_enc(n):
 
 
 def ue7_encs(n):
-	r = bytes(ue7_enc(n))
-	return r
+	return bytes(ue7_enc(n))
 
 
 assert ue7_encs(127) == b"\x7f"
@@ -72,8 +71,7 @@ class parser(FType):
 		prewrap = ext_l_s
 		prewrap += tag_s
 		prewrap += tag_len_s
-		wrapped = prewrap + data
-		return wrapped
+		return prewrap + data
 
 
 	def fixformat(self, d, delta):

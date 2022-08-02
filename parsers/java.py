@@ -83,8 +83,7 @@ class parser(FType):
 
 
 	def wrap(self, parasite):
-		wrapped = b"\1" + int2b(len(parasite)) + parasite
-		return wrapped
+		return b"\1" + int2b(len(parasite)) + parasite
 
 
 	def fixformat(self, d, delta):

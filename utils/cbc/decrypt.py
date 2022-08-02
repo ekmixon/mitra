@@ -35,11 +35,11 @@ if __name__=='__main__':
 	fname = os. path.splitext(fname)[0] # remove file extension
 
 	exts = exts.split(" ")[-2:]
-	fn1 = "%s.%s.%s" % (fname, hash_, exts[0])
+	fn1 = f"{fname}.{hash_}.{exts[0]}"
 	with open(fn1, "wb") as file1:
 		file1.write(plaintext)
 
-	fn2 = "%s.%s.%s" % (fname, hash_, exts[1])
+	fn2 = f"{fname}.{hash_}.{exts[1]}"
 	with open(fn2, "wb") as file2:
 		file2.write(ciphertext)
 
@@ -50,4 +50,4 @@ if __name__=='__main__':
 	print("plaintext2:", binascii.hexlify(ciphertext[:32]),"...")
 	print()
 	print("Test:")
-	print(" openssl enc -in %s -out %s -aes-128-cbc -iv %s -K %s" % (fn1, fn2, iv_s, key_s))
+	print(f" openssl enc -in {fn1} -out {fn2} -aes-128-cbc -iv {iv_s} -K {key_s}")

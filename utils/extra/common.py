@@ -9,7 +9,7 @@ import re
 from string import punctuation, digits, ascii_letters
 
 def randblock(l):
-	return bytes([random.randrange(255) for i in range(l)])
+	return bytes(random.randrange(255) for _ in range(l))
 
 
 # Cosmetic functions ###########################################################
@@ -25,10 +25,7 @@ def hexii(c):
 		return b" " + bytes([c])
 	if c == 0x0a:
 		return b"\n"
-	if c == b"\r":
-		return b"\\r"
-	#otherwise, return hex
-	return b"%02X" % c
+	return b"\\r" if c == b"\r" else b"%02X" % c
 
 
 def hexiis(s):
@@ -37,7 +34,7 @@ def hexiis(s):
 
 def showsplit(d, i):
 	WIDTH = 8
-	return "%s  |  %s" % (hexiis(d[i-WIDTH:i]), hexiis(d[i:i+WIDTH]))
+	return f"{hexiis(d[i-WIDTH:i])}  |  {hexiis(d[i:i+WIDTH])}"
 
 
 
@@ -100,17 +97,13 @@ def EnclosedString(d, starts, ends):
 
 def getCount(d):
 	s = EnclosedString(d, b"/Count ", b"/")
-	count = int(s)
-	return count
+	return int(s)
 
 
 def getObjDecl(d, s):
 	val = EnclosedString(d, s, b"0 R")
 	val = val.strip()
-	if val.decode().isnumeric():
-		return b"%s %s 0 R" % (s, val)
-	else:
-		return b""
+	return b"%s %s 0 R" % (s, val) if val.decode().isnumeric() else b""
 
 
 def getValDecl(d, s):
@@ -119,10 +112,7 @@ def getValDecl(d, s):
 	if off == -1:
 		return b""
 	match = re.match(b" *\/[A-Za-z0-9]*", d[off:])
-	if match is None:
-		return b""
-	else:
-		return b"%s %s" % (s, match[0])
+	return b"" if match is None else b"%s %s" % (s, match[0])
 
 
 def adjustToC(toc):
@@ -149,13 +139,10 @@ def adjustPDF(contents):
 		b"0000000000 00001 f "
 		]
 
-	i = 1
-	while i < objCount:
+	for i in range(1, objCount):
 		# only very standard object declarations
 		off = contents.find(b"\n%i 0 obj\n" % i) + 1
 		xrefLines.append(b"%010i 00000 n " % (off -  startSig))
-		i += 1
-
 	xref = b"\n".join(xrefLines)
 
 	# XREF length should be unchanged

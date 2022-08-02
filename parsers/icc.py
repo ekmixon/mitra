@@ -54,7 +54,7 @@ class parser(FType):
 
 		# adjust tag table
 		ptr = self.tagcount_o + self.tagcount_s + 4*1
-		for i in range(self.tagcount):
+		for _ in range(self.tagcount):
 			d = inc4b(d, ptr, fdelta)
 			ptr += 3*4
 

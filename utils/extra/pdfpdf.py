@@ -40,8 +40,6 @@ with fitz.open() as mergedDoc:
 	mergedDoc.setToC(toc)
 	dm = mergedDoc.write()
 
-	if 0: mergedDoc.save("_1merged.pdf")
-
 if pagemode == b"":
 	pagemode = b"/PageMode /UseOutlines" 
 
@@ -104,9 +102,10 @@ payload_l = len(payload)
 
 
 print(" * inserting parasite") #################################################
-mapping = {}
-for s in ("payload", "payload_l", "count", "kids", "extra"):
-	mapping[s.encode()] = locals()[s]
+mapping = {
+	s.encode(): locals()[s]
+	for s in ("payload", "payload_l", "count", "kids", "extra")
+}
 
 cuts = [0x30, 0x30 + payload_l]
 
@@ -142,24 +141,18 @@ pdf1, pdf2 = splitfile(contents, cuts)
 
 pdf1 = adjustPDF(pdf1)
 pdf2 = adjustPDF(pdf2)
-if 0:
-	with open("_payload1.pdf", "wb") as f: f.write(pdf1)
-	with open("_payload2.pdf", "wb") as f: f.write(pdf2)
-
-
-
 print(" * merging payloads & generating polyglot") #############################
 final = mixfiles(pdf1, pdf2, cuts)
 final += b"\0" * (16 - (len(final) % 16))
 final += b"\0" * 16
 
 offsets_s = repr(b"-".join([b"%x" % i for i in cuts]))[2:-1]
-with open("Z(%s).pdf.pdf" % offsets_s, "wb") as f:
+with open(f"Z({offsets_s}).pdf.pdf", "wb") as f:
 	f.write(final)
 
+WIDTH = 16
+l = WIDTH - 1
 for i in range(6):
-	WIDTH = 16
-	l = WIDTH - 1
 	s = i*(WIDTH)
 	print("   %08x: %s" % (s, hexiis(final[s:s+l])))
 

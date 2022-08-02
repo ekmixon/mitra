@@ -44,10 +44,6 @@ class parser(FType):
 
 
 	def wrap(self, data, id=b"junk"):
-		wrapped = b"".join([
-			b"\4", # Application block, not last
-			int4b(len(data) + 4)[1:], 
-			id,
-			data
-		])
-		return wrapped
+		return b"".join(
+			[b"\4", int4b(len(data) + 4)[1:], id, data]  # Application block, not last
+		)

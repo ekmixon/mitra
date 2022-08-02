@@ -73,7 +73,7 @@ class parser(FType):
 
 		# add parasite at the start of first section
 		host = host[:SectionsOffset] + parasite + host[SectionsOffset:]
-		
+
 		# adjust all sections offsets
 		host = relocateSections(host, SecTblOff, NumSec, delta)
 		return host, [] # TODO:swaps

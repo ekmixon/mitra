@@ -18,7 +18,7 @@ pad16 = lambda s: s + b"\0" * (16-len(s))
 
 def xor(a1, a2):
 	assert len(a1) == len(a2)
-	return bytes([(a1[i] ^ a2[i]) for i in range(len(a1))])
+	return bytes(a1[i] ^ a2[i] for i in range(len(a1)))
 
 
 fn, nonce = sys.argv[1:3]
@@ -51,12 +51,9 @@ old_length = last_split - 4
 # get the keys and nonce
 key1 = b"\x01" * 16 # b"Now?"
 key2 = b"\x02" * 16 # b"L4t3r!!!"
-if nonce.startswith("0x"):
-	nonce = int(nonce, 16)
-else:
-	nonce = int(nonce)
+nonce = int(nonce, 16) if nonce.startswith("0x") else int(nonce)
 print("Nonce: %i 0x%x" % (nonce, nonce))
-print("Keys: %s %s" % (repr(key1), repr(key2)))
+print(f"Keys: {repr(key1)} {repr(key2)}")
 
 nonce = (nonce << 32) + COUNTER_START
 
@@ -95,5 +92,5 @@ fixed = b"".join([
   data[cut:],
 	])
 
-with open("4-%s" % fn, "wb") as fout:
+with open(f"4-{fn}", "wb") as fout:
 	fout.write(fixed)

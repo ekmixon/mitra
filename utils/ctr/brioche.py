@@ -26,7 +26,7 @@ b2a = lambda b: repr(b)[2:-1]
 
 def xor(_a1, _a2):
 	assert len(_a1) == len(_a2)
-	return bytes([(_a1[i] ^ _a2[i]) for i in range(len(_a1))])
+	return bytes(_a1[i] ^ _a2[i] for i in range(len(_a1)))
 
 
 def pad(_d, _alig):
@@ -53,7 +53,7 @@ def getKS(key, nonce, bCount, initCount=0): # initCount = 2 for GCM, 0 for CTR
 
 def xor(a1, a2):
 	assert len(a1) == len(a2)
-	return bytes([(a1[i] ^ a2[i]) for i in range(len(a1))])
+	return bytes(a1[i] ^ a2[i] for i in range(len(a1)))
 
 
 def mix(d1, d2, l):
@@ -89,7 +89,7 @@ if __name__=='__main__':
 
 	key1 = pad16(unhextry(key1)).encode().ljust(3)
 	key2 = pad16(unhextry(key2)).encode().ljust(3)
-	assert not key1 == key2
+	assert key1 != key2
 
 	noncei = int(nonce)
 	nonceb = l2b(int(nonce),12)
@@ -124,7 +124,12 @@ if __name__=='__main__':
 		fpoc.write(dOut)
 		fpoc.close()
 
-	print("Generated output: %s" % (fnpoc))
+	print(f"Generated output: {fnpoc}")
 	print("Tests:")
-	print(" openssl enc -in %s -out output1.%s -aes-128-ctr -iv %s -K %s" % (fnpoc, exts[0].ljust(3), iv_s, key1_s))
-	print(" openssl enc -in %s -out output2.%s -aes-128-ctr -iv %s -K %s" % (fnpoc, exts[1].ljust(3), iv_s, key2_s))
+	print(
+		f" openssl enc -in {fnpoc} -out output1.{exts[0].ljust(3)} -aes-128-ctr -iv {iv_s} -K {key1_s}"
+	)
+
+	print(
+		f" openssl enc -in {fnpoc} -out output2.{exts[1].ljust(3)} -aes-128-ctr -iv {iv_s} -K {key2_s}"
+	)

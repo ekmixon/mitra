@@ -91,11 +91,11 @@ def Setup(desc):
 
 	if args.splitdir:
 		setVar("SPLITDIR", args.splitdir)
-		dprint("Split directory output is %s" % repr(getVar("SPLITDIR")))
+		dprint(f'Split directory output is {repr(getVar("SPLITDIR"))}')
 
 	if args.outdir:
 		setVar("OUTDIR", args.outdir)
-		dprint("Polyglots directory output is %s" % repr(getVar("OUTDIR")))
+		dprint(f'Polyglots directory output is {repr(getVar("OUTDIR"))}')
 
 	if args.pad != 0:
 		pad = args.pad[0] * 1024

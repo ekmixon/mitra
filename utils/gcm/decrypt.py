@@ -20,8 +20,7 @@ def gcm_decrypt(_key,_nonce,_ctxt,_tag,_ad):
 
 	decryptor.authenticate_additional_data(_ad)
 
-	pt = decryptor.update(_ctxt) + decryptor.finalize()
-	return pt
+	return decryptor.update(_ctxt) + decryptor.finalize()
 
 
 if __name__=='__main__':
@@ -46,10 +45,10 @@ if __name__=='__main__':
 	for v in ["key1", "key2", "adata", "nonce", "ciphertext", "tag"]:
 		vars()[v] = binascii.unhexlify(vars()[v])
 
-	assert not key1 == key2
+	assert key1 != key2
 	plaintxt1 = gcm_decrypt(key1, nonce, ciphertext, tag, adata)
 	plaintxt2 = gcm_decrypt(key2, nonce, ciphertext, tag, adata)
-	assert not plaintxt1 == plaintxt2
+	assert plaintxt1 != plaintxt2
 
 	success = False
 	try:
@@ -65,10 +64,10 @@ if __name__=='__main__':
 	fname = os.path.splitext(fname)[0] # remove file extension
 
 	exts = exts.split(" ")[-2:]
-	with open("%s-1.%s.%s" % (fname, hash, exts[0]), "wb") as file1:
+	with open(f"{fname}-1.{hash}.{exts[0]}", "wb") as file1:
 		file1.write(plaintxt1)
 
-	with open("%s-2.%s.%s" % (fname, hash, exts[1]), "wb") as file2:
+	with open(f"{fname}-2.{hash}.{exts[1]}", "wb") as file2:
 		file2.write(plaintxt2)
 
 	print("key1:", key1.rstrip(b"\0"))

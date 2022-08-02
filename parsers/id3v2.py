@@ -21,7 +21,7 @@ assert _7to8(b"\0\0\x6a\x7F") == 13695
 
 def _8to7(n):
 	l = []
-	for i in range(4):
+	for _ in range(4):
 		l += [n % 0x80]
 		n = n // 0x80
 	return bytes(l[::-1])
@@ -52,13 +52,14 @@ class parser(FType):
 
 
 	def wrap(self, data, type_=b"JUNK"):
-		wrapped = b"".join([
-			type_,
-			_8to7(len(data)),
-			b"\0\0",
-			data,
-		])
-		return wrapped
+		return b"".join(
+			[
+				type_,
+				_8to7(len(data)),
+				b"\0\0",
+				data,
+			]
+		)
 
 
 	def fixformat(self, d, delta):

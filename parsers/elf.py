@@ -48,7 +48,7 @@ class parser(FType):
 		# rely on the section header table
 		max_ = 0
 		o = self.sh_o + self.sh_s
-		for i in range(self.sh_c - 1):
+		for _ in range(self.sh_c - 1):
 			so = get4l(d, o+0x10) if self.bits == 32 else get8l(d, o+0x18)
 			ss = get4l(d, o+0x14) if self.bits == 32 else get8l(d, o+0x20)
 			max_ = max(max_, so + ss)
@@ -71,7 +71,7 @@ class parser(FType):
 		# fix section header table
 		o = self.sh_o + delta # it has been moved down
 		o += self.sh_s        # skip first entry
-		for i in range(self.sh_c - 1): 
+		for _ in range(self.sh_c - 1):
 			d = inc4l(d, o+0x10, delta) if self.bits == 32 else inc8l(d, o+0x18, delta)
 			o += self.sh_s
 

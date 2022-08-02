@@ -30,7 +30,7 @@ def getOverlap(fnin):
 	other_hdr = other_hdr[:other_hdr.find("}")]
 	other_hdr = binascii.unhexlify(other_hdr)
 	hdr_l = len(other_hdr)
-	print("Other header read from filename: `%s`" % b2a(binascii.hexlify(other_hdr)))
+	print(f"Other header read from filename: `{b2a(binascii.hexlify(other_hdr))}`")
 
 	return other_hdr, hdr_l
 
@@ -41,9 +41,7 @@ def getSwap(fnin, hdr_l):
 	assert len(swaps) == 2
 	#assert swaps[0] == hdr_l
 	assert swaps[1] % BLOCKLEN == 0
-	swap = swaps[1]
-
-	return swap
+	return swaps[1]
 
 
 if __name__=='__main__':
@@ -99,16 +97,19 @@ if __name__=='__main__':
 	ofb_dec = AES.new(key, AES.MODE_OFB, iv)
 	dOut = ofb_dec.decrypt(pad(dOut))
 
-	output = "\n".join([
-			"plaintext: %s" % b2a(binascii.hexlify(dOut)),
-			"key: %s" % b2a(binascii.hexlify(key)),
-			"iv: %s" % iv_s,
-		  "exts: %s" % " ".join(exts),
-		  "origin: %s" % fnin,
-		])
+	output = "\n".join(
+		[
+			f"plaintext: {b2a(binascii.hexlify(dOut))}",
+			f"key: {b2a(binascii.hexlify(key))}",
+			f"iv: {iv_s}",
+			f'exts: {" ".join(exts)}',
+			f"origin: {fnin}",
+		]
+	)
 
-	fnoutput = "%s.%s" % (fnpoc, exts[0])
-	print("Generated input file: %s" % (fnpoc))
+
+	fnoutput = f"{fnpoc}.{exts[0]}"
+	print(f"Generated input file: {fnpoc}")
 	with open(fnpoc, "wb") as fpoc:
 		fpoc.write(output.encode())
 		fpoc.close()

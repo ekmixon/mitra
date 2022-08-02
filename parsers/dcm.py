@@ -48,11 +48,11 @@ class parser(FType):
 
 		# the first TAG should be FILE META INFORMATION GROUP LENGTH
 		# which defines the length of the critical stuff.
-		
+
 		# Some viewer even ignore that convention
 		#  and tolerate PRIVATE tags right after the magic, at 0x84
 		HACK = True
-		
+
 		if not HACK:
 			cut = self.cut
 			if host[cut:cut + 8] != b"\x02\x00\x00\x00\x55\x4C\x04\x00":
@@ -97,13 +97,13 @@ class parser(FType):
 		if zcut is None:
 			print("> %s doesn't support cut (!?)" % zero.TYPE)
 			return None, []
-		
+
 		if zero.bAppData == False:
 			print("> %s doesn't support appended data." % zero.TYPE)
 			return None, []
 
 		if zcut + zero.prewrap > self.precav_s:
-			print("> %s Header too big to fit in Dicom cavity." % zero.TYPE)
+			print(f"> {zero.TYPE} Header too big to fit in Dicom cavity.")
 			return None, []
 
 		# TODO: wrappending support
@@ -116,7 +116,7 @@ class parser(FType):
 		nhead = tdata[zcut + zero.prewrap:ncut + self.prewrap]
 
 		if len(nhead) > zero.parasite_s:
-			print("> DICOM body too big to fit in %s parasite." % zero.TYPE)
+			print(f"> DICOM body too big to fit in {zero.TYPE} parasite.")
 			return None, []
 
 		nheadwrap = zero.wrap(nhead)

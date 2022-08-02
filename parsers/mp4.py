@@ -10,7 +10,7 @@ def dprint(s):
 	DEBUG = True
 	DEBUG = False
 	if DEBUG:
-		print(("D " + s))
+		print(f"D {s}")
 
 
 class parser(FType):
@@ -36,9 +36,7 @@ class parser(FType):
 			return False
 
 		# heif/c parsers don't support parasites or even appended data !?
-		if self.data[8:8+3] == b"hei":
-			return False
-		return True
+		return self.data[8:8+3] != b"hei"
 
 
 	def wrap(self, data):
@@ -51,7 +49,7 @@ class parser(FType):
 		offset = 0
 		tablecount = d.count(b"stco")
 		dprint("stco found: %i" % tablecount)
-		for i in range(tablecount):
+		for _ in range(tablecount):
 			offset = d.find(b"stco", offset)
 			dprint("current offset: %0X" % offset)
 
@@ -71,9 +69,9 @@ class parser(FType):
 			dprint(" offset count: %i" % offcount)
 			offset += 4 * 3
 			offsets = struct.unpack(">%iI" % offcount, d[offset:offset + offcount * 4])
-			dprint(" offsets (old): %s" % repr(list(offsets))) 
+			dprint(f" offsets (old): {repr(list(offsets))}")
 			offsets = [i + delta for i in offsets]
-			dprint(" (new) offsets: %s" % repr(offsets))
+			dprint(f" (new) offsets: {repr(offsets)}")
 
 			d = d[:offset] + struct.pack(">%iI" % offcount, *offsets) + d[offset+offcount*4:]
 

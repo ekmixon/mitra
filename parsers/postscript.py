@@ -43,12 +43,13 @@ class parser(FType):
 
 		if self.validate(data) == False:
 			return None
-		wrapped = b"".join([
-			self.PREWRAP,      
-			data,
-			self.POSTWRAP,
-		])
-		return wrapped
+		return b"".join(
+			[
+				self.PREWRAP,
+				data,
+				self.POSTWRAP,
+			]
+		)
 
 
 # for function parasites
@@ -63,9 +64,7 @@ def bBalancedPar(p):
 			if l < 0:
 				return False
 
-	if l != 0:
-		return False
-	return True
+	return l == 0
 
 assert bBalancedPar(b"") == True
 assert bBalancedPar(b"(") == False
@@ -82,17 +81,11 @@ assert bBalancedPar(b"(dcjdkwj(wljcwk)wkejcwe)") == True
 # for inline comments parasites
 def bNoNL(p):
 	"""check if contains any RC, NL or FF chars"""
-	for c in p:
-		if c in [0xA, 0xC, 0xD]:
-			return False
-	return True
+	return all(c not in [0xA, 0xC, 0xD] for c in p)
 
 assert bNoNL(b"") == True
 assert bNoNL(b"\x0a") == False
 assert bNoNL(b"\x0c") == False
 assert bNoNL(b"\x0d") == False
 assert bNoNL(b" \x0d ") == False
-assert bNoNL(
-	bytes([i for i in range(0,0xA)]) +
-	bytes([i for i in range(0xE,256)])
-	) == True
+assert bNoNL((bytes(list(range(0xA))) + bytes(list(range(0xE,256))))) == True

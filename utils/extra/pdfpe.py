@@ -80,15 +80,10 @@ dm = dm.replace(b"/Root 1 0 R", b"/Root 3 0 R")
 
 
 print(" * aligning PE header") #################################################
-mapping = {}
-for s in (
-	"payload",
-	"payload_l",
-	"count",
-	"kids",
-	"extra",
-	):
-	mapping[s.encode()] = locals()[s]
+mapping = {
+	s.encode(): locals()[s]
+	for s in ("payload", "payload_l", "count", "kids", "extra")
+}
 
 # aligning payload header
 stage1 = template % mapping
@@ -127,12 +122,12 @@ offsets_s = repr(b"-".join([b"%x" % i for i in offsets]))[2:-1]
 if not _DEBUG:
 	cleaned = b"M" + b"Z" + cleaned[2:]
 
-with open("Z(%s).exe.pdf" % offsets_s, "wb") as f:
+with open(f"Z({offsets_s}).exe.pdf", "wb") as f:
 	f.write(cleaned)
 
 if _DEBUG:
 	cleaned = b"M" + b"Z" + cleaned[2:]
-	with open("Z(%s).exe" % offsets_s, "wb") as f:
+	with open(f"Z({offsets_s}).exe", "wb") as f:
 		f.write(cleaned)
 
 print("Success!")

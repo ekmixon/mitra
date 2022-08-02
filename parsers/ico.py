@@ -37,7 +37,7 @@ class parser(FType):
 
 	def fixformat(self, d, delta):
 		offset = 6 + 0x0c
-		for i in range(self.count):
+		for _ in range(self.count):
 			d = inc4l(d, offset, delta)
 
 			offset += 0x10

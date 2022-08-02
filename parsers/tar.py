@@ -63,10 +63,7 @@ class parser(FType):
 			hdr[i + CHECKSUM_o] = ord(b" ")
 
 		# add all chars of the header to an unsigned int
-		c = 0
-		for i in hdr:
-			c += i
-
+		c = sum(hdr)
 		# store the unsigned int in octal, followed by space then NULL
 		for i, j in enumerate(oct(c)[2:]):
 			hdr[i + CHECKSUM_o] = ord(j)
@@ -101,7 +98,7 @@ class parser(FType):
 
 		for count, length in [[3,7], [2,11]]:
 			for _ in range(count):
-				for i in range(length):
+				for _ in range(length):
 					l[off] = ord("0")
 					off += 1
 				off += 1
@@ -109,8 +106,7 @@ class parser(FType):
 		for i, c in enumerate(b"\0ustar  "):
 			l[0x100 + i] = c
 
-		hdr = bytes(l)
-		return hdr
+		return bytes(l)
 
 
 # Reverse parasite (not a zipper)

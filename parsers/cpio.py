@@ -34,30 +34,28 @@ class parser(FType):
 
 
 	def makeHdr(self, filename, data):
-		hdr = b"".join([
-			self.MAGIC,
-			b"\0\0", # device
-			b"\0\0", # inode
-			b"\0\0", # permissions
-			b"\0\0", # uid
-			b"\0\0", # gid
-			b"\0\0", # nlink
-			b"\0\0", # rdevice number
-			b"\0\0", # mtime[2]
-			  b"\0\0",
-
-			# name size (includes trailing null)
-			int2l(len(filename) + 1),
-
-			# filesize[2]
-		  b"\0\0",
+		return b"".join(
+			[
+				self.MAGIC,
+				b"\0\0",  # device
+				b"\0\0",  # inode
+				b"\0\0",  # permissions
+				b"\0\0",  # uid
+				b"\0\0",  # gid
+				b"\0\0",  # nlink
+				b"\0\0",  # rdevice number
+				b"\0\0",  # mtime[2]
+				b"\0\0",
+				# name size (includes trailing null)
+				int2l(len(filename) + 1),
+				# filesize[2]
+				b"\0\0",
 				int2l(len(data)),
-
-			filename + b"\0",
-				b"\0"*((len(filename) + 1) % 2),
-			data
-			])
-		return hdr
+				filename + b"\0",
+				b"\0" * ((len(filename) + 1) % 2),
+				data,
+			]
+		)
 
 
 	def fixformat(self, d, delta):

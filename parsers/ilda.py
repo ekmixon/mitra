@@ -34,17 +34,18 @@ class parser(FType):
 
 	def wrap(self, data):
 		RecNb = int2b(len(data) // 3)
-		wrapped = b"".join([
-			b"ILDA",   # magic
-			b"\0\0\0", # reserved
-			b"\2",     # format code <= RGB 
-			b"\0"*8,   # name
-			b"\0"*8,   # company name
-			RecNb,     # Number of records * RGB
-			b"\0"*2,   # frame or number
-			b"\0"*2,   # 0
-			b"\0"*1,   # projector number
-			b"\0"*1,   # reserved
-			data
-		])
-		return wrapped
+		return b"".join(
+			[
+				b"ILDA",  # magic
+				b"\0\0\0",  # reserved
+				b"\2",  # format code <= RGB
+				b"\0" * 8,  # name
+				b"\0" * 8,  # company name
+				RecNb,  # Number of records * RGB
+				b"\0" * 2,  # frame or number
+				b"\0" * 2,  # 0
+				b"\0" * 1,  # projector number
+				b"\0" * 1,  # reserved
+				data,
+			]
+		)

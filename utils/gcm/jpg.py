@@ -25,7 +25,7 @@ def comments(s, delta=0):
 
 def xor(a1, a2):
 	assert len(a1) == len(a2)
-	return bytes([(a1[i] ^ a2[i]) for i in range(len(a1))])
+	return bytes(a1[i] ^ a2[i] for i in range(len(a1)))
 
 fn1, fn2 = sys.argv[1:3]
 with open(fn1, "rb") as f:
@@ -79,7 +79,7 @@ regexpCMT = rb"\xff\xfe.."
 comments = re.findall(regexpCMT, block1+suffix)
 
 data = block1+suffix
-l = [0] 
+l = [0]
 for m in re.compile(regexpCMT).finditer(data):
 	pattern = m.group()
 	pattern_o = m.start()
@@ -88,7 +88,7 @@ for m in re.compile(regexpCMT).finditer(data):
 
 l += [data.find(b"ANGE\xFF") + 4]
 
-zipperfn = "Z(%s).jpg.jpg" % ("-".join("%x" % i for i in l))
+zipperfn = f'Z({"-".join(("%x" % i for i in l))}).jpg.jpg'
 print("Generated file:\n%s" % zipperfn)
 
 with open(zipperfn, "wb") as zipper:

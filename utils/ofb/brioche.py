@@ -25,7 +25,7 @@ b2a = lambda b: repr(b)[2:-1]
 
 def xor(_a1, _a2):
 	assert len(_a1) == len(_a2)
-	return bytes([(_a1[i] ^ _a2[i]) for i in range(len(_a1))])
+	return bytes(_a1[i] ^ _a2[i] for i in range(len(_a1)))
 
 
 def pad(_d, _alig):
@@ -157,7 +157,13 @@ if __name__=='__main__':
 
 			if xor(block1[:hdr_xor_l], block2[:hdr_xor_l]) == hdr_xor:
 				print("Bruteforce results:")
-				print(" ".join("%s" % b2a(binascii.hexlify(i)) for i in [iv_s, hdr1, hdr2, key1, key2]))
+				print(
+					" ".join(
+						f"{b2a(binascii.hexlify(i))}"
+						for i in [iv_s, hdr1, hdr2, key1, key2]
+					)
+				)
+
 				return iv_s
 		return None
 

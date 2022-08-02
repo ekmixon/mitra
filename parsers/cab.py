@@ -70,8 +70,8 @@ class parser(FType):
 		d = inc4l(d, self.coffFiles_o, delta)
 
 		o = self.CFHEADER_s
-		for i in range(self.cFolders):
- 			d = inc4l(d, o + self.coffCabStart_o, delta)
- 			o += self.CFFOLDER_s
+		for _ in range(self.cFolders):
+			d = inc4l(d, o + self.coffCabStart_o, delta)
+			o += self.CFFOLDER_s
 
 		return d

@@ -25,22 +25,22 @@ if __name__=='__main__':
 	for v in ["key1", "key2", "iv", "ciphertext"]:
 		vars()[v] = binascii.unhexlify(vars()[v])
 
-	assert not key1 == key2
+	assert key1 != key2
 	ofb1 = AES.new(key1, AES.MODE_OFB, iv)
 	ofb2 = AES.new(key2, AES.MODE_OFB, iv)
 	plaintxt1 = ofb1.decrypt(ciphertext)
 	plaintxt2 = ofb2.decrypt(ciphertext)
-	assert not plaintxt1 == plaintxt2
+	assert plaintxt1 != plaintxt2
 
 	hash = hashlib.sha256(ciphertext).hexdigest()[:8].lower()
 
 	fname = os. path.splitext(fname)[0] # remove file extension
 
 	exts = exts.split(" ")[-2:]
-	with open("%s.%s.%s" % (fname, hash, exts[0]), "wb") as file1:
+	with open(f"{fname}.{hash}.{exts[0]}", "wb") as file1:
 		file1.write(plaintxt1)
 
-	with open("%s.%s.%s" % (fname, hash, exts[1]), "wb") as file2:
+	with open(f"{fname}.{hash}.{exts[1]}", "wb") as file2:
 		file2.write(plaintxt2)
 
 	print("key1:", key1.rstrip(b"\0"))

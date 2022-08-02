@@ -13,8 +13,7 @@ def EnclosedString(d, starts, ends):
 
 def getCount(d):
 	s = EnclosedString(d, b"/Count ", b"/")
-	count = int(s)
-	return count
+	return int(s)
 
 
 template = b"""%%PDF-1.3
@@ -81,13 +80,10 @@ class parser(FType):
 			]
 
 
-		i = 1
-		while i < objCount:
+		for i in range(1, objCount):
 			# only very standard object declarations
 			off = contents.find(b"\n%i 0 obj\n" % i) + 1
 			xrefLines.append(b"%010i 00000 n " % (off))
-			i += 1
-
 		xref = b"\n".join(xrefLines)
 
 		# XREF length should be unchanged
@@ -117,7 +113,7 @@ class parser(FType):
 			f.write(self.data)
 
 		# merging with a dummy page (mutool)
-		rval = os.system(mutool + ' merge -o merged.pdf blank.pdf host.pdf')
+		rval = os.system(f'{mutool} merge -o merged.pdf blank.pdf host.pdf')
 		if rval != 0:
 			print("Error. Is mutool installed?")
 		os.remove('host.pdf')
@@ -141,10 +137,7 @@ class parser(FType):
 		dm = dm.replace(b"/Root 1 0 R", b"/Root 3 0 R")
 
 		# need this to map b'payload' to the payload var ...?
-		mapping = {}
-		for s in ("count", "kids"):
-			mapping[s.encode()] = locals()[s]
-
+		mapping = {s.encode(): locals()[s] for s in ("count", "kids")}
 		# aligning payload header
 		stage1 = template % mapping
 

@@ -33,7 +33,7 @@ class parser(FType):
 	def identify(self):
 		d = self.data
 		start = getd(d, self.sig_o, self.sig_s)
-		if start != self.MAGICi and start != self.MAGICp:
+		if start not in [self.MAGICi, self.MAGICp]:
 			return False
 
 		self.numlumps = get4l(d, self.numlumps_o)
@@ -46,7 +46,7 @@ class parser(FType):
 		"Increase the pointers if the size is not null (non-virtual)."
 		d = inc4l(d, self.infotableofs_o, delta)
 		ptr = self.lumps_o + delta
-		for i in range(self.numlumps):
+		for _ in range(self.numlumps):
 			size = get4l(d, ptr + 4)
 			if size != 0:
 				d = inc4l(d, ptr, delta)

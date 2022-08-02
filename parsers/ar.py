@@ -28,16 +28,17 @@ class parser(FType):
 
 	def makeHdr(self, filename, timestamp=0, owner=0, group=0, perms=0, size=0):
 		pad = lambda s, l:s.ljust(l, b" ")
-		hdr = b"".join([
-			pad(filename, 16),
-			pad(b"%i" % timestamp, 12),
-			pad(b"%i" % owner, 6),
-			pad(b"%i" % group, 6),
-			pad(b"%03i" % perms, 8), # in theory they are in octal
-			pad(b"%i" % size, 10),
-			b"`\n",
-			])
-		return hdr
+		return b"".join(
+			[
+				pad(filename, 16),
+				pad(b"%i" % timestamp, 12),
+				pad(b"%i" % owner, 6),
+				pad(b"%i" % group, 6),
+				pad(b"%03i" % perms, 8),  # in theory they are in octal
+				pad(b"%i" % size, 10),
+				b"`\n",
+			]
+		)
 
 
 # assert makeHdr(b"/") == b"/               0           0     0     000     0         `\n"

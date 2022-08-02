@@ -71,9 +71,7 @@ class AES_GCM:
         # precompute the table for multiplication in finite field
         table = []  # for 8-bit
         for i in range(16):
-            row = []
-            for j in range(256):
-                row.append(gf_2_128_mul(self.__auth_key, j << (8 * i)))
+            row = [gf_2_128_mul(self.__auth_key, j << (8 * i)) for j in range(256)]
             table.append(tuple(row))
         self.__pre_table = tuple(table)
 
@@ -91,15 +89,8 @@ class AES_GCM:
         len_txt = len(txt)
 
         # padding
-        if 0 == len_aad % 16:
-            data = aad
-        else:
-            data = aad + b'\x00' * (16 - len_aad % 16)
-        if 0 == len_txt % 16:
-            data += txt
-        else:
-            data += txt + b'\x00' * (16 - len_txt % 16)
-
+        data = aad if len_aad % 16 == 0 else aad + b'\x00' * (16 - len_aad % 16)
+        data += txt if len_txt % 16 == 0 else txt + b'\x00' * (16 - len_txt % 16)
         tag = 0
         assert len(data) % 16 == 0
         for i in range(len(data) // 16):
@@ -133,7 +124,7 @@ class AES_GCM:
 
             if 0 != len_plaintext % 16:
                 padded_plaintext = plaintext + \
-                    b'\x00' * (16 - len_plaintext % 16)
+                        b'\x00' * (16 - len_plaintext % 16)
             else:
                 padded_plaintext = plaintext
             ciphertext = aes_ctr.encrypt(padded_plaintext)[:len_plaintext]
@@ -158,12 +149,11 @@ class AES_GCM:
 
         pad = self.__aes_ecb.encrypt(long_to_bytes((init_value << 32) | 1, 16))
         print("gcm impl ghash pad:", binascii.hexlify(pad))
-        exception_flag = False
-        if auth_tag != self.__ghash(auth_data, ciphertext) ^ \
-                bytes_to_long(self.__aes_ecb.encrypt(
-                long_to_bytes((init_value << 32) | 1, 16))):
-            #raise InvalidTagException
-            exception_flag = True
+        exception_flag = auth_tag != self.__ghash(
+            auth_data, ciphertext
+        ) ^ bytes_to_long(
+            self.__aes_ecb.encrypt(long_to_bytes((init_value << 32) | 1, 16))
+        )
 
         len_ciphertext = len(ciphertext)
         if len_ciphertext > 0:
@@ -176,9 +166,9 @@ class AES_GCM:
             keystream = aes_ctr.decrypt(b'\x00'*len_ciphertext)[:len_ciphertext]
             print("GCM impl keystream:")
             print("\t", binascii.hexlify(keystream))
-            if 0 != len_ciphertext % 16:
+            if len_ciphertext % 16 != 0:
                 padded_ciphertext = ciphertext + \
-                    b'\x00' * (16 - len_ciphertext % 16)
+                        b'\x00' * (16 - len_ciphertext % 16)
             else:
                 padded_ciphertext = ciphertext
             plaintext = aes_ctr.decrypt(padded_ciphertext)[:len_ciphertext]
